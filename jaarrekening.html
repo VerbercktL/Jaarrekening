@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+	<body>
+		<div id="table">
+        </div>
+        <div id="textDiv">
+        </div>
+    </body>
+    <script>
+        var aAccounts = [
+            {code: 20, amount: 1000, amountPY: 1000, credit: false},
+            {code: 20, amount: 2000, amountPY: 2000, credit: false},
+            {code: 20, amount: 3000, amountPY: 3000, credit: false},
+            {code: 21, amount: 1100, amountPY: 1200, credit: true},
+            {code: 21, amount: 1300, amountPY: -5400, credit: true},
+            {code: 22, amount: 2100, amountPY: 2200, credit: false},
+            {code: 22, amount: 2300, amountPY: 2400, credit: true},
+            {code: 23, amount: 3100, amountPY: 3200, credit: true},
+            {code: 23, amount: 3300, amountPY: 3400, credit: false},
+            {code: 24, amount: 4100, amountPY: 4200, credit: false},
+            {code: 24, amount: 4300, amountPY: 4400, credit: false},
+            {code: 25, amount: 5100, amountPY: 5200, credit: true},
+            {code: 25, amount: 5300, amountPY: 5400, credit: true},
+            {code: 26, amount: 6100, amountPY: 6200, credit: false},
+            {code: 26, amount: 6300, amountPY: 6400, credit: false},
+            {code: 27, amount: 7100, amountPY: 7200, credit: false},
+            {code: 27, amount: 7300, amountPY: 7400, credit: false}
+        ];
+        var teller=0;
+        var helper = {};
+        var totalAmount=0;
+        var totalAmountPY=0;
+         var text="";
+        var html = "<table><tr><th>Naam</th><th>Code</th><th>Boekjaar</th><th>Vorig boekjaar</th></tr>";
+        
+        
+        for (i in aAccounts) {
+            switch(aAccounts[i].code){
+                case 20:{
+                    aAccounts[i].topicName = "Oprichtingskosten";
+                    if (aAccounts[i].credit===false){
+                        break;
+                    }else{
+                        aAccounts[i].amount *=-1;
+                        aAccounts[i].amountPY *=-1;
+                    }
+                    break;
+                }
+            
+                case 21:{
+                    aAccounts[i].topicName = "Immaterieel";
+                    if (aAccounts[i].credit===false){
+                        break;
+                    }else{
+                        aAccounts[i].amount *=-1;
+                        aAccounts[i].amountPY *=-1;
+                    }
+                    break;
+                }
+                case 22:{
+                    aAccounts[i].topicName="Terreinen";
+                    if (aAccounts[i].credit===false){
+                        break;
+                    }else{
+                        aAccounts[i].amount *=-1;
+                        aAccounts[i].amountPY *=-1;
+                    }
+                    break;
+                }
+
+                case 23:{
+                    aAccounts[i].topicName="Installaties";
+                    if (aAccounts[i].credit===false){
+                        break;
+                    }else{
+                        aAccounts[i].amount *=-1;
+                        aAccounts[i].amountPY *=-1;
+                    }
+                    break;
+                }
+                case 24:{
+                    aAccounts[i].topicName="Meubilair";
+                    if (aAccounts[i].credit===false){
+                        break;
+                    }else{
+                        aAccounts[i].amount *=-1;
+                        aAccounts[i].amountPY *=-1;
+                    }
+                    break;
+                }
+
+                case 25:{
+                    aAccounts[i].topicName="Leasing";
+                    if (aAccounts[i].credit===false){
+                        break;
+                    }else{
+                        aAccounts[i].amount *=-1;
+                        aAccounts[i].amountPY *=-1;
+                    }
+                    break;
+                }
+                case 26:{
+                    aAccounts[i].topicName="Overig";
+                    if (aAccounts[i].credit===false){
+                        break;
+                    }else{
+                        aAccounts[i].amount *=-1;
+                        aAccounts[i].amountPY *=-1;
+                    }
+                    break;
+                }
+
+                case 27:{
+                    aAccounts[i].topicName="Vooruitbetaling";
+                    if (aAccounts[i].credit===false){
+                        break;
+                    }else{
+                        aAccounts[i].amount *=-1;
+                        aAccounts[i].amountPY *=-1;
+                    }
+                    break;
+                }        
+            };
+
+        }
+        
+        
+        var result = aAccounts.reduce(function(r, o) {
+            var key = o.code;
+  
+            if(!helper[key]) {
+                helper[key] = Object.assign({}, o); // create a copy of o
+                r.push(helper[key]);
+            } else {
+                helper[key].amount += o.amount;
+                helper[key].amountPY += o.amountPY;
+            }
+            return r;
+        }, []);
+
+        for (var x=0; x<result.length; x++){
+            totalAmount+=result[x].amount;
+            totalAmountPY+=result[x].amountPY;
+        }
+
+       
+        for (var i = 0; i < result.length; i++) {
+            html+="<tr>";
+            html+="<td>"+result[i].topicName+"</td>";
+            html+="<td>"+result[i].code+"</td>";
+            
+            
+            if (result[i].amount<0||result[i].amountPY<0){
+                text +="<p class='red'>"+result[i].topicName+" heeft een negatief bedrag. ";
+            }
+            
+            if(result[i].amount<0){
+                html+="<td class='red'>"+result[i].amount+"</td>";
+                text +="Boekjaar: "+result[i].amount;
+            }else{
+                html+="<td>"+result[i].amount+"</td>";
+            }
+            
+            if(result[i].amountPY<0){
+                html+="<td class='red'>"+result[i].amountPY+"</td>";
+                text +=" vorig boekjaar: "+result[i].amountPY;
+            }else{
+                html+="<td>"+result[i].amountPY+"</td>"; 
+            }
+            
+            
+            text += "</p>";
+            html+="</tr>";
+        }
+        
+        html+="<tr><td>totaal</td><td></td><td>"+totalAmount+"</td><td>"+totalAmountPY+"</td></tr>";
+        html+="</table>";
+        document.getElementById("table").innerHTML = html;
+        document.getElementById("textDiv").innerHTML = text;
+    </script>
+</html>
+
+<!-- De bedoeling is om met de array aAccounts de screenshot na te bouwen. De tabel moet zo dynamisch mogelijk zijn.
+ Aan de hand van de code wordt bepaald bij welke lijn de account bij hoort. Als credit true is moet dit worden afgetrokken i.p.v. opgeteld.
+ Dus als er accounts bijkomen in de array moet dit bij in de tabel komen zonder de code aan te passen.
+ Als er nieuwe lijnen voor nieuwe codes bv. 28 bijkomen moet dit dynamisch kunnen worden toegevoegd door de code zo min mogelijk aan te passen.
+ De rode tekst onderaan zijn er enkel als het bedrag negatief is. Als totaal negatief is moet dit ook worden getoond met een rode tekst 
+ 
+ Dit kan worden gemaakt met standaard native javascript in deze html pagina.
+ -->
